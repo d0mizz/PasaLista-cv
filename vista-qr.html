@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PasaLista – Escanear QR</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/qr.css">
+</head>
+<body>
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <aside id="sidebar">
+    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+    <div class="logo-wrap">
+      <div class="logo-icon">PL</div>
+      <div class="logo-text">Pasa<span>Lista</span></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" href="main.html">
+        <span class="icon">🏠</span> Inicio
+      </a>
+      <a class="nav-item active" href="vista-qr.html">
+        <span class="icon">📷</span> Escanear QR
+      </a>
+      <a class="nav-item" href="vista-asistencias.html">
+        <span class="icon">📋</span> Lista Asistencias
+      </a>
+      <a class="nav-item" href="#">
+        <span class="icon">📊</span> Estadística de Asistencia
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-pill">
+        <div class="avatar">👨‍🏫</div>
+        <div class="user-info">
+          <div class="user-name">Docente</div>
+          <div class="user-role">I.E. 43026</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="school-name">I.E. 43026 · Carlos Alverto Conde Vasquez</div>
+      <div class="header-right">
+        <div class="today-pill" id="todayPill">📅 —</div>
+        <span class="badge">ILO</span>
+      </div>
+    </header>
+
+    <section>
+      <div class="qr-wrap">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">📷 Escanear QR</div>
+            <span class="badge">MÓVIL</span>
+          </div>
+          <div class="panel-body">
+            <div class="qr-stage">
+              <h2>Zona de Escaneo</h2>
+              <p class="qr-msg" id="qrStatusMsg">Activa la cámara y acerca el QR al recuadro.</p>
+              <div class="qr-box">
+                <div class="hint">Consejo: coloca el QR dentro del recuadro.</div>
+                <div id="qrReader" class="qr-reader"></div>
+                <div class="qr-last" aria-live="polite">
+                  <div class="row"><span>Último QR</span><div id="qrLastValue">—</div></div>
+                  <div class="row"><span>Alumno</span><div id="qrLastStudent">—</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">📋 Acciones</div>
+          </div>
+          <div class="panel-body">
+            <button class="btn-primary" style="width:100%;" onclick="window.location.href='vista-asistencias.html'">Ir a Lista de Asistencias</button>
+            <div style="height:10px;"></div>
+            <button class="btn-outline" style="width:100%;" onclick="window.location.href='main.html'">Volver a Inicio</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="main.html">
+      <span class="b-icon">🏠</span>
+      Inicio
+    </a>
+    <a href="vista-qr.html" class="active">
+      <span class="b-icon">📷</span>
+      Escanear
+    </a>
+    <a href="vista-asistencias.html">
+      <span class="b-icon">📋</span>
+      Asistencias
+    </a>
+    <a href="#">
+      <span class="b-icon">📊</span>
+      Estadística
+    </a>
+  </nav>
+
+  <!-- MODAL: desktop QR not available -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      doc,
+      getDoc,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAcqGT_3Vu0YDsLjWEf3wFilhi25Re37yw",
+      authDomain: "pasalista-7a70d.firebaseapp.com",
+      projectId: "pasalista-7a70d",
+      storageBucket: "pasalista-7a70d.firebasestorage.app",
+      messagingSenderId: "578094708275",
+      appId: "1:578094708275:web:61d16992900de582d35546",
+      measurementId: "G-F859LVL2XK"
+    };
+
+    let db = null;
+    let qrScanner = null;
+    let lastScanAt = 0;
+
+    const $ = (id) => document.getElementById(id);
+    const isConfigured = () => Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
+
+    function ensureFirebase() {
+      if (db) return true;
+      if (!isConfigured()) {
+        setQrMsg("Configura Firebase para registrar asistencias.", "bad");
+        return false;
+      }
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      return true;
+    }
+
+    function isMobile() {
+      return window.matchMedia('(max-width: 768px)').matches;
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const btn     = document.getElementById('menuBtn');
+      const isOpen  = sidebar.classList.toggle('open');
+      overlay.classList.toggle('visible', isOpen);
+      btn.classList.toggle('open', isOpen);
+    }
+    window.toggleSidebar = toggleSidebar;
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('visible');
+      document.getElementById('menuBtn').classList.remove('open');
+    }
+    window.closeSidebar = closeSidebar;
+
+    function setToday() {
+      const el = $("todayPill");
+      if (!el) return;
+      const now = new Date();
+      const fmt = new Intl.DateTimeFormat('es-PE', { weekday: 'long', day: '2-digit', month: 'short', year: 'numeric' });
+      const text = fmt.format(now);
+      el.textContent = `📅 ${text.charAt(0).toUpperCase() + text.slice(1)}`;
+    }
+
+    function setQrMsg(text, kind) {
+      const el = $("qrStatusMsg");
+      if (!el) return;
+      el.textContent = text;
+      el.classList.remove("good", "bad");
+      if (kind) el.classList.add(kind);
+    }
+
+    async function getAlumnoByCodigo(codigo) {
+      if (!ensureFirebase()) return null;
+      const ref = doc(db, "alumnos", String(codigo));
+      const snap = await getDoc(ref);
+      return snap.exists() ? snap.data() : null;
+    }
+
+    async function marcarAsistencia(codigo, rawQr) {
+      if (!ensureFirebase()) return;
+      const alumno = await getAlumnoByCodigo(codigo);
+      if (!alumno) {
+        $("qrLastStudent").textContent = "No encontrado";
+        setQrMsg("QR leído, pero el alumno no existe. Importa el Excel primero en Lista de Asistencias.", "bad");
+        return;
+      }
+      $("qrLastStudent").textContent = alumno.nombre || alumno.apellidos || alumno.codigo || "Alumno";
+      setQrMsg("Asistencia registrada correctamente.", "good");
+      await addDoc(collection(db, "asistencias"), {
+        alumnoCodigo: String(codigo),
+        alumnoNombre: alumno.nombre || "",
+        alumnoSeccion: alumno.seccion || "",
+        rawQr: String(rawQr || ""),
+        when: serverTimestamp()
+      });
+    }
+
+    function parseQrToCodigo(qrText) {
+      try {
+        const obj = JSON.parse(qrText);
+        const c = obj.codigo ?? obj.id ?? obj.alumnoCodigo ?? obj.alumno ?? "";
+        if (c) return String(c).trim();
+      } catch (_) {}
+      const m = String(qrText).match(/(\d{3,})/);
+      if (m) return m[1];
+      return String(qrText || "").trim();
+    }
+
+    async function startQr() {
+      if (!isMobile()) {
+        setQrMsg("Escaneo disponible solo en celulares. Esta vista es informativa en PC.", "bad");
+        return;
+      }
+      if (!ensureFirebase()) return;
+
+      const el = $("qrReader");
+      if (!el || !window.Html5Qrcode) {
+        setQrMsg("No se pudo cargar la librería QR. Revisa tu conexión.", "bad");
+        return;
+      }
+      if (qrScanner) return;
+
+      qrScanner = new Html5Qrcode("qrReader");
+      setQrMsg("Iniciando cámara…", "");
+      try {
+        const config = { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1.0 };
+        await qrScanner.start(
+          { facingMode: "environment" },
+          config,
+          async (decodedText) => {
+            const now = Date.now();
+            if (now - lastScanAt < 1200) return;
+            lastScanAt = now;
+
+            $("qrLastValue").textContent = decodedText;
+            const codigo = parseQrToCodigo(decodedText);
+            await marcarAsistencia(codigo, decodedText);
+          }
+        );
+        setQrMsg("Cámara activa. Escanea un QR.", "good");
+      } catch (err) {
+        console.error(err);
+        setQrMsg("No se pudo iniciar la cámara. Da permiso de cámara al navegador.", "bad");
+      }
+    }
+
+    async function stopQr() {
+      if (!qrScanner) return;
+      try {
+        await qrScanner.stop();
+        await qrScanner.clear();
+      } catch (_) {}
+      qrScanner = null;
+      setQrMsg("Cámara detenida.", "");
+    }
+
+    window.addEventListener('pageshow', startQr);
+    window.addEventListener('pagehide', stopQr);
+    setToday();
+  </script>
+</body>
+</html>
+

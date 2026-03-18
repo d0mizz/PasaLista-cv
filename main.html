@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PasaLista – I.E. 43026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<style>
+  .hero-shield {
+    background-image: url("assets/escudo-conde.png");
+  }
+</style>
+<body>
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <aside id="sidebar">
+    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+    <div class="logo-wrap">
+      <div class="logo-icon">PL</div>
+      <div class="logo-text">Pasa<span>Lista</span></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item active" href="main.html">
+        <span class="icon">🏠</span> Inicio
+      </a>
+      <a class="nav-item" href="vista-qr.html">
+        <span class="icon">📷</span> Escanear QR
+      </a>
+      <a class="nav-item" href="vista-asistencias.html">
+        <span class="icon">📋</span> Lista Asistenciwas
+      </a>
+      <a class="nav-item" href="#">
+        <span class="icon">📊</span> Estadística de Asistencia
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-pill">
+        <div class="avatar">👨‍🏫</div>
+        <div class="user-info">
+          <div class="user-name">Docente</div>
+          <div class="user-role">I.E. 43026</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="school-name">I.E. 43026 · Carlos Alverto Conde Vasquez</div>
+      <div class="header-right">
+        <div class="today-pill" id="todayPill">📅 —</div>
+        <span class="badge">ILO</span>
+      </div>
+    </header>
+
+    <section>
+      <div class="hero">
+        <div class="hero-text">
+          <div class="hero-tag">⚡ Sistema de Asistencia</div>
+          <h1>Bienvenido a<br/><span>PasaLista</span></h1>
+          <p>Gestiona la asistencia de tus alumnos de forma rápida, visual y sin papeles.</p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="vista-qr.html">📷 Escanear QR</a>
+            <a class="btn-outline" href="vista-asistencias.html">Ver Asistencias →</a>
+          </div>
+        </div>
+        <div class="hero-shield" id="heroShield" aria-hidden="true"></div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon red">👥</div>
+          <div>
+            <div class="stat-num">128</div>
+            <div class="stat-label">Estudiantes</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon gold">✅</div>
+          <div>
+            <div class="stat-num">94%</div>
+            <div class="stat-label">Asistencia Hoy</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">📅</div>
+          <div>
+            <div class="stat-num">47</div>
+            <div class="stat-label">Días Registrados</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Acciones Rápidas</div>
+        <div class="quick-grid">
+          <a class="quick-card" href="vista-qr.html">
+            <div class="quick-card-icon">📷</div>
+            <div>
+              <div class="quick-card-title">Escanear QR</div>
+              <div class="quick-card-desc">Registra la asistencia de un alumno escaneando su código QR personal.</div>
+            </div>
+          </a>
+          <a class="quick-card" href="vista-asistencias.html">
+            <div class="quick-card-icon">📋</div>
+            <div>
+              <div class="quick-card-title">Lista de Asistencias</div>
+              <div class="quick-card-desc">Consulta y filtra el historial completo de asistencias por fecha o alumno.</div>
+            </div>
+          </a>
+          <div class="quick-card">
+            <div class="quick-card-icon">📊</div>
+            <div>
+              <div class="quick-card-title">Estadísticas</div>
+              <div class="quick-card-desc">Visualiza reportes gráficos de asistencia mensual y por sección.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+    </section>
+  </main>
+
+  <!-- Modal escritorio para QR -->
+  <div class="qr-desktop-modal" id="qrDesktopModal">
+    <div class="qr-desktop-backdrop" onclick="closeQrDesktopModal()"></div>
+    <div class="qr-desktop-card">
+      <p class="qr-desktop-title">
+        <span class="qr-desktop-icon">⚠️</span>
+        La función de escanear QR solo está disponible en dispositivos móviles
+      </p>
+      <p class="qr-desktop-text">
+        Si desea registrar la asistencia de los alumnos desde la web de escritorio debe realizarlo
+        en la sección de <b>Lista de Asistencia</b>.
+      </p>
+      <div class="qr-desktop-buttons">
+        <button class="qr-desktop-btn-yes" onclick="window.location.href='vista-asistencias.html'">
+          Sí, llévame a Lista de Asistencia
+        </button>
+        <button class="qr-desktop-btn-no" onclick="closeQrDesktopModal()">
+          No, cerrar este mensaje
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="main.html" class="active">
+      <span class="b-icon">🏠</span>
+      Inicio
+    </a>
+    <a href="vista-qr.html">
+      <span class="b-icon">📷</span>
+      Escanear
+    </a>
+    <a href="vista-asistencias.html">
+      <span class="b-icon">📋</span>
+      Asistencias
+    </a>
+    <a href="#">
+      <span class="b-icon">📊</span>
+      Estadística
+    </a>
+  </nav>
+
+  <script>
+    function isMobile() {
+      return window.matchMedia('(max-width: 768px)').matches;
+    }
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const btn     = document.getElementById('menuBtn');
+      const isOpen  = sidebar.classList.toggle('open');
+      overlay.classList.toggle('visible', isOpen);
+      btn.classList.toggle('open', isOpen);
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('visible');
+      document.getElementById('menuBtn').classList.remove('open');
+    }
+    (function setToday() {
+      const el = document.getElementById('todayPill');
+      if (!el) return;
+      const now = new Date();
+      const fmt = new Intl.DateTimeFormat('es-PE', { weekday: 'long', day: '2-digit', month: 'short', year: 'numeric' });
+      const text = fmt.format(now);
+      el.textContent = `📅 ${text.charAt(0).toUpperCase() + text.slice(1)}`;
+    })();
+    function openQrDesktopModal() {
+      const modal = document.getElementById('qrDesktopModal');
+      if (modal) modal.classList.add('visible');
+    }
+    function closeQrDesktopModal() {
+      const modal = document.getElementById('qrDesktopModal');
+      if (modal) modal.classList.remove('visible');
+    }
+    (function guardQrOnDesktop() {
+      const links = Array.from(document.querySelectorAll('a[href="vista-qr.html"]'));
+      links.forEach(link => {
+        link.addEventListener('click', function(e) {
+          if (!isMobile()) {
+            e.preventDefault();
+            openQrDesktopModal();
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
+

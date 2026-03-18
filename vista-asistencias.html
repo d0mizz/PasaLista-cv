@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PasaLista – Lista de Asistencias</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/asistencias.css">
+</head>
+<body>
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <aside id="sidebar">
+    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+    <div class="logo-wrap">
+      <div class="logo-icon">PL</div>
+      <div class="logo-text">Pasa<span>Lista</span></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" href="main.html">
+        <span class="icon">🏠</span> Inicio
+      </a>
+      <a class="nav-item" href="vista-qr.html">
+        <span class="icon">📷</span> Escanear QR
+      </a>
+      <a class="nav-item active" href="vista-asistencias.html">
+        <span class="icon">📋</span> Lista Asistencias
+      </a>
+      <a class="nav-item" href="#">
+        <span class="icon">📊</span> Estadística de Asistencia
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-pill">
+        <div class="avatar">👨‍🏫</div>
+        <div class="user-info">
+          <div class="user-name">Docente</div>
+          <div class="user-role">I.E. 43026</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="school-name">I.E. 43026 · Carlos Alverto Conde Vasquez</div>
+      <div class="header-right">
+        <div class="today-pill" id="todayPill">📅 —</div>
+        <span class="badge">ILO</span>
+      </div>
+    </header>
+
+    <section>
+      <div class="table-wrap">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">📋 Lista de Asistencias</div>
+            <div class="panel-actions">
+              <input id="excelInput" type="file" accept=".xlsx,.xls,.csv" style="display:none;" />
+              <button class="btn-small" id="btnImportExcel" type="button">⬆️ Importar Excel (Alumnos)</button>
+              <button class="btn-small" id="btnRefreshAsistencias" type="button">🔄 Actualizar</button>
+            </div>
+          </div>
+          <div class="panel-body" style="padding:0;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Alumno</th>
+                  <th>Fecha</th>
+                  <th>Hora</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="asistenciasBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </section>
+  </main>
+
+  <!-- Modal escritorio para QR (mismo diseño que en main) -->
+  <div class="qr-desktop-modal" id="qrDesktopModal">
+    <div class="qr-desktop-backdrop" onclick="closeQrDesktopModal()"></div>
+    <div class="qr-desktop-card">
+      <p class="qr-desktop-title">
+        <span class="qr-desktop-icon">⚠️</span>
+        La función de escanear QR solo está disponible en dispositivos móviles
+      </p>
+      <p class="qr-desktop-text">
+        Si desea registrar la asistencia de los alumnos desde la web de escritorio debe realizarlo
+        en la sección de <b>Lista de Asistencia</b>.
+      </p>
+      <div class="qr-desktop-buttons">
+        <button class="qr-desktop-btn-yes" onclick="window.location.href='vista-asistencias.html'">
+          Sí, llévame a Lista de Asistencia
+        </button>
+        <button class="qr-desktop-btn-no" onclick="closeQrDesktopModal()">
+          No, cerrar este mensaje
+        </button>
+      </div>
+    </div>
+  </div>
+  <nav class="bottom-nav">
+    <a href="main.html">
+      <span class="b-icon">🏠</span>
+      Inicio
+    </a>
+    <a href="vista-qr.html">
+      <span class="b-icon">📷</span>
+      Escanear
+    </a>
+    <a href="vista-asistencias.html" class="active">
+      <span class="b-icon">📋</span>
+      Asistencias
+    </a>
+    <a href="#">
+      <span class="b-icon">📊</span>
+      Estadística
+    </a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      doc,
+      setDoc,
+      serverTimestamp,
+      query,
+      orderBy,
+      limit,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAcqGT_3Vu0YDsLjWEf3wFilhi25Re37yw",
+      authDomain: "pasalista-7a70d.firebaseapp.com",
+      projectId: "pasalista-7a70d",
+      storageBucket: "pasalista-7a70d.firebasestorage.app",
+      messagingSenderId: "578094708275",
+      appId: "1:578094708275:web:61d16992900de582d35546",
+      measurementId: "G-F859LVL2XK"
+    };
+
+    let db = null;
+    const $ = (id) => document.getElementById(id);
+    const isConfigured = () => Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
+
+    function ensureFirebase() {
+      if (db) return true;
+      if (!isConfigured()) {
+        const body = $("asistenciasBody");
+        if (body) body.innerHTML = `<tr><td colspan="4" style="padding:16px;">Configura Firebase en <b>vista-asistencias.html</b> para ver datos.</td></tr>`;
+        return false;
+      }
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      return true;
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const btn     = document.getElementById('menuBtn');
+      const isOpen  = sidebar.classList.toggle('open');
+      overlay.classList.toggle('visible', isOpen);
+      btn.classList.toggle('open', isOpen);
+    }
+    window.toggleSidebar = toggleSidebar;
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('visible');
+      document.getElementById('menuBtn').classList.remove('open');
+    }
+    window.closeSidebar = closeSidebar;
+
+    function setToday() {
+      const el = $("todayPill");
+      if (!el) return;
+      const now = new Date();
+      const fmt = new Intl.DateTimeFormat('es-PE', { weekday: 'long', day: '2-digit', month: 'short', year: 'numeric' });
+      const text = fmt.format(now);
+      el.textContent = `📅 ${text.charAt(0).toUpperCase() + text.slice(1)}`;
+    }
+
+    function escapeHtml(str) {
+      return String(str || "").replace(/[&<>"']/g, s => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[s]));
+    }
+
+    function fmtDateTime(ts) {
+      const d = ts instanceof Date ? ts : new Date(ts);
+      const date = d.toLocaleDateString("es-PE", { day: "2-digit", month: "2-digit", year: "numeric" });
+      const time = d.toLocaleTimeString("es-PE", { hour: "2-digit", minute: "2-digit" });
+      return { date, time };
+    }
+
+    async function cargarAsistencias() {
+      const body = $("asistenciasBody");
+      if (!body) return;
+      body.innerHTML = "";
+      if (!ensureFirebase()) return;
+
+      const q = query(collection(db, "asistencias"), orderBy("when", "desc"), limit(50));
+      const snaps = await getDocs(q);
+      if (snaps.empty) {
+        body.innerHTML = `<tr><td colspan="4" style="padding:16px;">Aún no hay asistencias registradas.</td></tr>`;
+        return;
+      }
+      snaps.forEach(s => {
+        const a = s.data();
+        const when = a.when?.toDate ? a.when.toDate() : new Date();
+        const { date, time } = fmtDateTime(when);
+        const alumno = a.alumnoNombre || a.alumnoCodigo || "—";
+        body.insertAdjacentHTML("beforeend", `
+          <tr>
+            <td>${escapeHtml(alumno)}</td>
+            <td>${escapeHtml(date)}</td>
+            <td>${escapeHtml(time)}</td>
+            <td><span class="status-pill status-ok">✅ Presente</span></td>
+          </tr>
+        `);
+      });
+    }
+
+    function normalizeKey(k) {
+      return String(k || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    async function importExcel(file) {
+      if (!ensureFirebase()) return;
+      if (!file) return;
+
+      const data = await file.arrayBuffer();
+      const wb = XLSX.read(data, { type: "array" });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { defval: "" });
+
+      if (!rows.length) {
+        alert("El Excel está vacío.");
+        return;
+      }
+
+      let ok = 0;
+      let skip = 0;
+
+      for (const r of rows) {
+        const obj = {};
+        for (const [k, v] of Object.entries(r)) obj[normalizeKey(k)] = v;
+
+        const codigo = String(obj.codigo || obj.cod || obj.id || obj.alumno || obj["codigo alumno"] || "").trim();
+        const nombre = String(obj.nombre || obj.nombres || obj.alumno_nombre || "").trim();
+        const seccion = String(obj.seccion || obj.sección || obj.aula || "").trim();
+        const grado = String(obj.grado || obj.nivel || "").trim();
+        const dni = String(obj.dni || obj.documento || "").trim();
+
+        if (!codigo) { skip++; continue; }
+
+        await setDoc(doc(db, "alumnos", codigo), {
+          codigo,
+          nombre,
+          seccion,
+          grado,
+          dni,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        ok++;
+      }
+
+      alert(`Importación lista.\nAlumnos guardados: ${ok}\nFilas ignoradas (sin código): ${skip}`);
+    }
+
+    document.getElementById("btnImportExcel").addEventListener("click", () => {
+      document.getElementById("excelInput").click();
+    });
+    document.getElementById("excelInput").addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      e.target.value = "";
+      if (file) await importExcel(file);
+    });
+    document.getElementById("btnRefreshAsistencias").addEventListener("click", cargarAsistencias);
+    function openQrDesktopModal() {
+      const modal = document.getElementById('qrDesktopModal');
+      if (modal) modal.classList.add('visible');
+    }
+    function closeQrDesktopModal() {
+      const modal = document.getElementById('qrDesktopModal');
+      if (modal) modal.classList.remove('visible');
+    }
+    // Bloquear acceso a Escanear QR desde PC con modal agradable
+    Array.from(document.querySelectorAll('a[href="vista-qr.html"]')).forEach(link => {
+      link.addEventListener('click', function(e) {
+        if (!window.matchMedia('(max-width: 768px)').matches) {
+          e.preventDefault();
+          openQrDesktopModal();
+        }
+      });
+    });
+    setToday();
+    cargarAsistencias();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,35 @@
+.table-wrap {
+  margin: 28px 40px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-size: 13px;
+}
+
+th {
+  background: rgba(247,243,239,0.9);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  font-weight: 900;
+}
+
+.spacer { height: 48px; }
+
+@media (max-width: 1024px) {
+  .table-wrap { margin: 20px 24px 0; }
+}
+
+@media (max-width: 768px) {
+  .table-wrap { margin: 14px 16px 0; }
+}
+

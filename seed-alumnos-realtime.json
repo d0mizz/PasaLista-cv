@@ -1,0 +1,125 @@
+{
+  "alumnos": {
+    "43026001": {
+      "codigo": "43026001",
+      "dni": "70123456",
+      "nombre": "Juan Pérez",
+      "grado": "1",
+      "seccion": "A",
+      "nivel": "Secundaria",
+      "sexo": "M",
+      "estado": "activo"
+    },
+    "43026002": {
+      "codigo": "43026002",
+      "dni": "70987654",
+      "nombre": "María Quispe",
+      "grado": "1",
+      "seccion": "A",
+      "nivel": "Secundaria",
+      "sexo": "F",
+      "estado": "activo"
+    },
+    "43026003": {
+      "codigo": "43026003",
+      "dni": "71223344",
+      "nombre": "Carlos Rojas",
+      "grado": "1",
+      "seccion": "A",
+      "nivel": "Secundaria",
+      "sexo": "M",
+      "estado": "activo"
+    },
+    "43026004": {
+      "codigo": "43026004",
+      "dni": "73445566",
+      "nombre": "Lucía Mamani",
+      "grado": "1",
+      "seccion": "B",
+      "nivel": "Secundaria",
+      "sexo": "F",
+      "estado": "activo"
+    },
+    "43026005": {
+      "codigo": "43026005",
+      "dni": "74556677",
+      "nombre": "Diego Choque",
+      "grado": "2",
+      "seccion": "A",
+      "nivel": "Secundaria",
+      "sexo": "M",
+      "estado": "activo"
+    },
+    "43026006": {
+      "codigo": "43026006",
+      "dni": "75667788",
+      "nombre": "Andrea Huanca",
+      "grado": "2",
+      "seccion": "B",
+      "nivel": "Secundaria",
+      "sexo": "F",
+      "estado": "activo"
+    },
+    "43026007": {
+      "codigo": "43026007",
+      "dni": "76778899",
+      "nombre": "José Apaza",
+      "grado": "3",
+      "seccion": "A",
+      "nivel": "Secundaria",
+      "sexo": "M",
+      "estado": "activo"
+    },
+    "43026008": {
+      "codigo": "43026008",
+      "dni": "77889900",
+      "nombre": "Valeria Condori",
+      "grado": "3",
+      "seccion": "B",
+      "nivel": "Secundaria",
+      "sexo": "F",
+      "estado": "activo"
+    },
+    "43026009": {
+      "codigo": "43026009",
+      "dni": "78990011",
+      "nombre": "Miguel Coaquira",
+      "grado": "4",
+      "seccion": "A",
+      "nivel": "Secundaria",
+      "sexo": "M",
+      "estado": "activo"
+    },
+    "43026010": {
+      "codigo": "43026010",
+      "dni": "79001122",
+      "nombre": "Camila Flores",
+      "grado": "4",
+      "seccion": "B",
+      "nivel": "Secundaria",
+      "sexo": "F",
+      "estado": "activo"
+    },
+    "43026011": {
+      "codigo": "43026011",
+      "dni": "70112233",
+      "nombre": "Bruno Paredes",
+      "grado": "5",
+      "seccion": "A",
+      "nivel": "Secundaria",
+      "sexo": "M",
+      "estado": "activo"
+    },
+    "43026012": {
+      "codigo": "43026012",
+      "dni": "70223344",
+      "nombre": "Sofía Ramos",
+      "grado": "5",
+      "seccion": "B",
+      "nivel": "Secundaria",
+      "sexo": "F",
+      "estado": "activo"
+    }
+  }
+}
+

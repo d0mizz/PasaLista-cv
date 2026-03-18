@@ -1,0 +1,127 @@
+.qr-wrap {
+  margin: 28px 40px 0;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.qr-stage {
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(240,192,64,0.16), transparent 55%),
+    radial-gradient(circle at 95% 40%, rgba(192,57,43,0.12), transparent 55%),
+    #0f1224;
+  color: white;
+  padding: 22px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.qr-stage::after {
+  content: "";
+  position: absolute;
+  inset: -40px;
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(255,255,255,0.05) 0px,
+    rgba(255,255,255,0.05) 12px,
+    transparent 12px,
+    transparent 24px
+  );
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.qr-stage h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 34px;
+  letter-spacing: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.qr-msg {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: rgba(255,255,255,0.75);
+  position: relative;
+  z-index: 1;
+}
+.qr-msg.good { color: rgba(240,192,64,0.9); }
+.qr-msg.bad  { color: rgba(231,76,60,0.95); }
+
+.qr-box {
+  margin-top: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.qr-reader {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  min-height: 240px;
+}
+
+.qr-last {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+.qr-last .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.85);
+  font-weight: 800;
+  font-size: 12px;
+}
+.qr-last .row span {
+  color: rgba(255,255,255,0.65);
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.hint {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.spacer { height: 48px; }
+
+/* Modal simple para escritorio no permitido se hereda de shared (estructura) */
+
+@media (max-width: 1024px) {
+  .qr-wrap   { margin: 20px 24px 0; grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .qr-wrap { margin: 14px 16px 0; }
+}
+
