@@ -66,6 +66,7 @@
             <div class="panel-actions">
               <input id="excelInput" type="file" accept=".xlsx,.xls,.csv" style="display:none;" />
               <button class="btn-small" id="btnImportExcel" type="button">⬆️ Importar Excel (Alumnos)</button>
+              <button class="btn-small" id="btnSeedAlumnos" type="button">🌱 Seed Alumnos desde JSON</button>
               <button class="btn-small" id="btnRefreshAsistencias" type="button">🔄 Actualizar</button>
             </div>
           </div>
@@ -74,8 +75,8 @@
               <thead>
                 <tr>
                   <th>Alumno</th>
-                  <th>Fecha</th>
-                  <th>Hora</th>
+                  <th>Grado</th>
+                  <th>Sección</th>
                   <th>Estado</th>
                 </tr>
               </thead>
@@ -133,16 +134,14 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import {
-      getFirestore,
-      collection,
-      doc,
-      setDoc,
-      serverTimestamp,
+      getDatabase,
+      ref,
+      set,
+      get,
       query,
-      orderBy,
-      limit,
-      getDocs
-    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+      orderByChild,
+      limitToLast
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAcqGT_3Vu0YDsLjWEf3wFilhi25Re37yw",
@@ -152,6 +151,131 @@
       messagingSenderId: "578094708275",
       appId: "1:578094708275:web:61d16992900de582d35546",
       measurementId: "G-F859LVL2XK"
+    };
+
+    const seedData = {
+      "alumnos": {
+        "43026001": {
+          "codigo": "43026001",
+          "dni": "70123456",
+          "nombre": "Juan Pérez",
+          "grado": "1",
+          "seccion": "A",
+          "nivel": "Secundaria",
+          "sexo": "M",
+          "estado": "activo"
+        },
+        "43026002": {
+          "codigo": "43026002",
+          "dni": "70987654",
+          "nombre": "María Quispe",
+          "grado": "1",
+          "seccion": "A",
+          "nivel": "Secundaria",
+          "sexo": "F",
+          "estado": "activo"
+        },
+        "43026003": {
+          "codigo": "43026003",
+          "dni": "71223344",
+          "nombre": "Carlos Rojas",
+          "grado": "1",
+          "seccion": "A",
+          "nivel": "Secundaria",
+          "sexo": "M",
+          "estado": "activo"
+        },
+        "43026004": {
+          "codigo": "43026004",
+          "dni": "73445566",
+          "nombre": "Lucía Mamani",
+          "grado": "1",
+          "seccion": "B",
+          "nivel": "Secundaria",
+          "sexo": "F",
+          "estado": "activo"
+        },
+        "43026005": {
+          "codigo": "43026005",
+          "dni": "74556677",
+          "nombre": "Diego Choque",
+          "grado": "2",
+          "seccion": "A",
+          "nivel": "Secundaria",
+          "sexo": "M",
+          "estado": "activo"
+        },
+        "43026006": {
+          "codigo": "43026006",
+          "dni": "75667788",
+          "nombre": "Andrea Huanca",
+          "grado": "2",
+          "seccion": "B",
+          "nivel": "Secundaria",
+          "sexo": "F",
+          "estado": "activo"
+        },
+        "43026007": {
+          "codigo": "43026007",
+          "dni": "76778899",
+          "nombre": "José Apaza",
+          "grado": "3",
+          "seccion": "A",
+          "nivel": "Secundaria",
+          "sexo": "M",
+          "estado": "activo"
+        },
+        "43026008": {
+          "codigo": "43026008",
+          "dni": "77889900",
+          "nombre": "Valeria Condori",
+          "grado": "3",
+          "seccion": "B",
+          "nivel": "Secundaria",
+          "sexo": "F",
+          "estado": "activo"
+        },
+        "43026009": {
+          "codigo": "43026009",
+          "dni": "78990011",
+          "nombre": "Miguel Coaquira",
+          "grado": "4",
+          "seccion": "A",
+          "nivel": "Secundaria",
+          "sexo": "M",
+          "estado": "activo"
+        },
+        "43026010": {
+          "codigo": "43026010",
+          "dni": "79001122",
+          "nombre": "Camila Flores",
+          "grado": "4",
+          "seccion": "B",
+          "nivel": "Secundaria",
+          "sexo": "F",
+          "estado": "activo"
+        },
+        "43026011": {
+          "codigo": "43026011",
+          "dni": "70112233",
+          "nombre": "Bruno Paredes",
+          "grado": "5",
+          "seccion": "A",
+          "nivel": "Secundaria",
+          "sexo": "M",
+          "estado": "activo"
+        },
+        "43026012": {
+          "codigo": "43026012",
+          "dni": "70223344",
+          "nombre": "Sofía Ramos",
+          "grado": "5",
+          "seccion": "B",
+          "nivel": "Secundaria",
+          "sexo": "F",
+          "estado": "activo"
+        }
+      }
     };
 
     let db = null;
@@ -166,7 +290,7 @@
         return false;
       }
       const app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
+      db = getDatabase(app);
       return true;
     }
 
@@ -215,26 +339,34 @@
       body.innerHTML = "";
       if (!ensureFirebase()) return;
 
-      const q = query(collection(db, "asistencias"), orderBy("when", "desc"), limit(50));
-      const snaps = await getDocs(q);
-      if (snaps.empty) {
-        body.innerHTML = `<tr><td colspan="4" style="padding:16px;">Aún no hay asistencias registradas.</td></tr>`;
-        return;
+      try {
+        // No necesitamos índices si no ordenamos por un campo específico.
+        const alumnosRef = ref(db, 'alumnos');
+        const snapshot = await get(alumnosRef);
+        if (!snapshot.exists()) {
+          body.innerHTML = `<tr><td colspan="4" style="padding:16px;">Aún no hay alumnos registrados.</td></tr>`;
+          return;
+        }
+        const alumnos = snapshot.val();
+        const entries = Object.entries(alumnos);
+        for (const [codigo, a] of entries) {
+          const alumno = a.nombre || a.alumnoCodigo || "—";
+          const grado = a.grado || "—";
+          const seccion = a.seccion || "—";
+          const estado = a.estado || "activo";
+          body.insertAdjacentHTML("beforeend", `
+            <tr>
+              <td>${escapeHtml(alumno)}</td>
+              <td>${escapeHtml(grado)}</td>
+              <td>${escapeHtml(seccion)}</td>
+              <td><span class="status-pill status-ok">✅ ${escapeHtml(estado)}</span></td>
+            </tr>
+          `);
+        }
+      } catch (error) {
+        console.error("Error cargando alumnos:", error);
+        body.innerHTML = `<tr><td colspan="4" style="padding:16px;">Error al cargar datos: ${error.message}</td></tr>`;
       }
-      snaps.forEach(s => {
-        const a = s.data();
-        const when = a.when?.toDate ? a.when.toDate() : new Date();
-        const { date, time } = fmtDateTime(when);
-        const alumno = a.alumnoNombre || a.alumnoCodigo || "—";
-        body.insertAdjacentHTML("beforeend", `
-          <tr>
-            <td>${escapeHtml(alumno)}</td>
-            <td>${escapeHtml(date)}</td>
-            <td>${escapeHtml(time)}</td>
-            <td><span class="status-pill status-ok">✅ Presente</span></td>
-          </tr>
-        `);
-      });
     }
 
     function normalizeKey(k) {
@@ -273,18 +405,47 @@
 
         if (!codigo) { skip++; continue; }
 
-        await setDoc(doc(db, "alumnos", codigo), {
-          codigo,
-          nombre,
-          seccion,
-          grado,
-          dni,
-          updatedAt: serverTimestamp()
-        }, { merge: true });
-        ok++;
+        try {
+          await set(ref(db, `alumnos/${codigo}`), {
+            codigo,
+            nombre,
+            seccion,
+            grado,
+            dni,
+            estado: "activo",
+            updatedAt: Date.now()
+          });
+          ok++;
+        } catch (e) {
+          console.error(e);
+          skip++;
+        }
       }
 
       alert(`Importación lista.\nAlumnos guardados: ${ok}\nFilas ignoradas (sin código): ${skip}`);
+    }
+
+    async function seedAlumnos() {
+      if (!ensureFirebase()) return;
+      if (!confirm("¿Estás seguro de que quieres sembrar los alumnos desde el JSON? Esto puede sobrescribir datos existentes.")) return;
+
+      let ok = 0;
+      let skip = 0;
+
+      for (const [codigo, alumno] of Object.entries(seedData.alumnos)) {
+        try {
+          await set(ref(db, `alumnos/${codigo}`), {
+            ...alumno,
+            updatedAt: Date.now()
+          });
+          ok++;
+        } catch (e) {
+          console.error(e);
+          skip++;
+        }
+      }
+
+      alert(`Seeding completado.\nAlumnos guardados: ${ok}\nErrores: ${skip}`);
     }
 
     document.getElementById("btnImportExcel").addEventListener("click", () => {
@@ -295,6 +456,7 @@
       e.target.value = "";
       if (file) await importExcel(file);
     });
+    document.getElementById("btnSeedAlumnos").addEventListener("click", seedAlumnos);
     document.getElementById("btnRefreshAsistencias").addEventListener("click", cargarAsistencias);
     function openQrDesktopModal() {
       const modal = document.getElementById('qrDesktopModal');

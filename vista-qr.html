@@ -121,13 +121,12 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import {
-      getFirestore,
-      collection,
-      doc,
-      getDoc,
-      addDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+      getDatabase,
+      ref,
+      get,
+      set,
+      push
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAcqGT_3Vu0YDsLjWEf3wFilhi25Re37yw",
@@ -153,7 +152,7 @@
         return false;
       }
       const app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
+      db = getDatabase(app);
       return true;
     }
 
@@ -196,9 +195,9 @@
 
     async function getAlumnoByCodigo(codigo) {
       if (!ensureFirebase()) return null;
-      const ref = doc(db, "alumnos", String(codigo));
-      const snap = await getDoc(ref);
-      return snap.exists() ? snap.data() : null;
+      const alumnoRef = ref(db, `alumnos/${String(codigo)}`);
+      const snap = await get(alumnoRef);
+      return snap.exists() ? snap.val() : null;
     }
 
     async function marcarAsistencia(codigo, rawQr) {
@@ -211,12 +210,14 @@
       }
       $("qrLastStudent").textContent = alumno.nombre || alumno.apellidos || alumno.codigo || "Alumno";
       setQrMsg("Asistencia registrada correctamente.", "good");
-      await addDoc(collection(db, "asistencias"), {
+      const asistenciasRef = ref(db, "asistencias");
+      const newAsistenciaRef = push(asistenciasRef);
+      await set(newAsistenciaRef, {
         alumnoCodigo: String(codigo),
         alumnoNombre: alumno.nombre || "",
         alumnoSeccion: alumno.seccion || "",
         rawQr: String(rawQr || ""),
-        when: serverTimestamp()
+        when: Date.now()
       });
     }
 
