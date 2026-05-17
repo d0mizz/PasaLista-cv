@@ -1,0 +1,497 @@
+{
+  "config": {
+    "horaLimite": "07:30"
+  },
+
+  "alumnos": {
+    "a_20260001": { "id":"a_20260001","codigo":"20260001","nombres":"Mateo","apellidos":"Quispe Flores","grado":"Inicial","seccion":"2A","activo":true },
+    "a_20260002": { "id":"a_20260002","codigo":"20260002","nombres":"Luciana","apellidos":"Mamani Torres","grado":"Inicial","seccion":"2A","activo":true },
+    "a_20260003": { "id":"a_20260003","codigo":"20260003","nombres":"Thiago","apellidos":"Vargas Cruz","grado":"Inicial","seccion":"3A","activo":true },
+    "a_20260004": { "id":"a_20260004","codigo":"20260004","nombres":"Valentina","apellidos":"Rojas Medina","grado":"Inicial","seccion":"3A","activo":true },
+    "a_20260005": { "id":"a_20260005","codigo":"20260005","nombres":"Sebastián","apellidos":"Paredes Luna","grado":"Inicial","seccion":"4A","activo":true },
+    "a_20260006": { "id":"a_20260006","codigo":"20260006","nombres":"Camila","apellidos":"Silva Ramos","grado":"Inicial","seccion":"4A","activo":true },
+    "a_20260007": { "id":"a_20260007","codigo":"20260007","nombres":"Diego","apellidos":"Fernández Soto","grado":"Inicial","seccion":"5A","activo":true },
+    "a_20260008": { "id":"a_20260008","codigo":"20260008","nombres":"Mariana","apellidos":"Castro Ruiz","grado":"Inicial","seccion":"5A","activo":true },
+
+    "a_20260009": { "id":"a_20260009","codigo":"20260009","nombres":"José","apellidos":"García López","grado":"1 Primaria","seccion":"A","activo":true },
+    "a_20260010": { "id":"a_20260010","codigo":"20260010","nombres":"Andrea","apellidos":"Mendoza Salas","grado":"1 Primaria","seccion":"A","activo":true },
+    "a_20260011": { "id":"a_20260011","codigo":"20260011","nombres":"Carlos","apellidos":"Torres Vega","grado":"1 Primaria","seccion":"B","activo":true },
+    "a_20260012": { "id":"a_20260012","codigo":"20260012","nombres":"Daniela","apellidos":"Núñez Díaz","grado":"1 Primaria","seccion":"B","activo":true },
+    "a_20260013": { "id":"a_20260013","codigo":"20260013","nombres":"Joaquín","apellidos":"Herrera Ramos","grado":"1 Primaria","seccion":"C","activo":true },
+    "a_20260014": { "id":"a_20260014","codigo":"20260014","nombres":"Renata","apellidos":"Cruz Medina","grado":"1 Primaria","seccion":"C","activo":true },
+    "a_20260015": { "id":"a_20260015","codigo":"20260015","nombres":"Ángel","apellidos":"Ramírez Quispe","grado":"1 Primaria","seccion":"D","activo":true },
+    "a_20260016": { "id":"a_20260016","codigo":"20260016","nombres":"Mía","apellidos":"Flores Soto","grado":"1 Primaria","seccion":"D","activo":true },
+
+    "a_20260017": { "id":"a_20260017","codigo":"20260017","nombres":"Luis","apellidos":"Pérez Luna","grado":"2 Primaria","seccion":"A","activo":true },
+    "a_20260018": { "id":"a_20260018","codigo":"20260018","nombres":"Ariana","apellidos":"Silva Torres","grado":"2 Primaria","seccion":"A","activo":true },
+    "a_20260019": { "id":"a_20260019","codigo":"20260019","nombres":"Leonardo","apellidos":"Rojas Flores","grado":"2 Primaria","seccion":"B","activo":true },
+    "a_20260020": { "id":"a_20260020","codigo":"20260020","nombres":"Bianca","apellidos":"Castillo Vega","grado":"2 Primaria","seccion":"B","activo":true },
+
+    "a_20260021": { "id":"a_20260021","codigo":"20260021","nombres":"Gael","apellidos":"Vargas Soto","grado":"2 Primaria","seccion":"C","activo":true },
+    "a_20260022": { "id":"a_20260022","codigo":"20260022","nombres":"Emma","apellidos":"Navarro Cruz","grado":"2 Primaria","seccion":"C","activo":true },
+    "a_20260023": { "id":"a_20260023","codigo":"20260023","nombres":"Samuel","apellidos":"Delgado Ruiz","grado":"2 Primaria","seccion":"D","activo":true },
+    "a_20260024": { "id":"a_20260024","codigo":"20260024","nombres":"Antonella","apellidos":"Medina Flores","grado":"2 Primaria","seccion":"D","activo":true },
+
+    "a_20260025": { "id":"a_20260025","codigo":"20260025","nombres":"Franco","apellidos":"López Paredes","grado":"3 Primaria","seccion":"A","activo":true },
+    "a_20260026": { "id":"a_20260026","codigo":"20260026","nombres":"Alessia","apellidos":"Torres Ramos","grado":"3 Primaria","seccion":"A","activo":true },
+    "a_20260027": { "id":"a_20260027","codigo":"20260027","nombres":"Ian","apellidos":"Mendoza Ruiz","grado":"3 Primaria","seccion":"B","activo":true },
+    "a_20260028": { "id":"a_20260028","codigo":"20260028","nombres":"Lucía","apellidos":"Castro Vega","grado":"3 Primaria","seccion":"B","activo":true },
+
+    "a_20260029": { "id":"a_20260029","codigo":"20260029","nombres":"Cristopher","apellidos":"Silva Torres","grado":"3 Primaria","seccion":"C","activo":true },
+    "a_20260030": { "id":"a_20260030","codigo":"20260030","nombres":"Salomé","apellidos":"Rojas Cruz","grado":"3 Primaria","seccion":"C","activo":true },
+    "a_20260031": { "id":"a_20260031","codigo":"20260031","nombres":"Fabio","apellidos":"Quispe Luna","grado":"3 Primaria","seccion":"D","activo":true },
+    "a_20260032": { "id":"a_20260032","codigo":"20260032","nombres":"Nicole","apellidos":"Fernández Medina","grado":"3 Primaria","seccion":"D","activo":true },
+
+    "a_20260033": { "id":"a_20260033","codigo":"20260033","nombres":"Axel","apellidos":"Paredes Soto","grado":"4 Primaria","seccion":"A","activo":true },
+    "a_20260034": { "id":"a_20260034","codigo":"20260034","nombres":"Emily","apellidos":"Vega Ramos","grado":"4 Primaria","seccion":"A","activo":true },
+    "a_20260035": { "id":"a_20260035","codigo":"20260035","nombres":"Dylan","apellidos":"Torres Ruiz","grado":"4 Primaria","seccion":"B","activo":true },
+    "a_20260036": { "id":"a_20260036","codigo":"20260036","nombres":"Abril","apellidos":"Castillo Flores","grado":"4 Primaria","seccion":"B","activo":true },
+
+    "a_20260037": { "id":"a_20260037","codigo":"20260037","nombres":"Adrián","apellidos":"Silva Quispe","grado":"4 Primaria","seccion":"C","activo":true },
+    "a_20260038": { "id":"a_20260038","codigo":"20260038","nombres":"Kiara","apellidos":"Navarro Vega","grado":"4 Primaria","seccion":"C","activo":true },
+
+    "a_20260039": { "id":"a_20260039","codigo":"20260039","nombres":"Bruno","apellidos":"Mendoza Soto","grado":"5 Primaria","seccion":"A","activo":true },
+    "a_20260040": { "id":"a_20260040","codigo":"20260040","nombres":"Aitana","apellidos":"Rojas Medina","grado":"5 Primaria","seccion":"A","activo":true },
+
+    "a_20260041": { "id":"a_20260041","codigo":"20260041","nombres":"Martín","apellidos":"Pérez Torres","grado":"5 Primaria","seccion":"B","activo":true },
+    "a_20260042": { "id":"a_20260042","codigo":"20260042","nombres":"Fernanda","apellidos":"Luna Cruz","grado":"5 Primaria","seccion":"B","activo":true },
+
+    "a_20260043": { "id":"a_20260043","codigo":"20260043","nombres":"Benjamín","apellidos":"Castro Flores","grado":"5 Primaria","seccion":"C","activo":true },
+    "a_20260044": { "id":"a_20260044","codigo":"20260044","nombres":"Julieta","apellidos":"Silva Ramos","grado":"5 Primaria","seccion":"C","activo":true },
+
+    "a_20260045": { "id":"a_20260045","codigo":"20260045","nombres":"Rodrigo","apellidos":"Quispe Vega","grado":"6 Primaria","seccion":"A","activo":true },
+    "a_20260046": { "id":"a_20260046","codigo":"20260046","nombres":"Valeria","apellidos":"Torres Ruiz","grado":"6 Primaria","seccion":"A","activo":true },
+
+    "a_20260047": { "id":"a_20260047","codigo":"20260047","nombres":"Santiago","apellidos":"Medina Soto","grado":"6 Primaria","seccion":"B","activo":true },
+    "a_20260048": { "id":"a_20260048","codigo":"20260048","nombres":"Luciana","apellidos":"Paredes Flores","grado":"6 Primaria","seccion":"B","activo":true },
+
+    "a_20260049": { "id":"a_20260049","codigo":"20260049","nombres":"Matías","apellidos":"Vargas Luna","grado":"6 Primaria","seccion":"C","activo":true },
+    "a_20260050": { "id":"a_20260050","codigo":"20260050","nombres":"Daniela","apellidos":"Ramos Cruz","grado":"6 Primaria","seccion":"C","activo":true }
+  },
+
+  "tardanzas": {
+    "2026-05-16_a_20260001": {
+      "alumnoId":"a_20260001",
+      "nombre":"Quispe Flores, Mateo",
+      "fecha":"2026-05-16",
+      "hora":"07:48",
+      "minutosTarde":18,
+      "tipo":"tardanza",
+      "justificada":true,
+      "justificacion":"Consulta médica"
+    },
+
+    "2026-05-16_a_20260007": {
+      "alumnoId":"a_20260007",
+      "nombre":"Fernández Soto, Diego",
+      "fecha":"2026-05-16",
+      "hora":"08:02",
+      "minutosTarde":32,
+      "tipo":"tardanza",
+      "justificada":false,
+      "justificacion":""
+    },
+
+    "2026-05-16_a_20260015": {
+      "alumnoId":"a_20260015",
+      "nombre":"Ramírez Quispe, Ángel",
+      "fecha":"2026-05-16",
+      "hora":"07:55",
+      "minutosTarde":25,
+      "tipo":"tardanza",
+      "justificada":true,
+      "justificacion":"Problemas de transporte"
+    },
+
+    "2026-05-16_a_20260022": {
+      "alumnoId":"a_20260022",
+      "nombre":"Navarro Cruz, Emma",
+      "fecha":"2026-05-16",
+      "hora":"08:10",
+      "minutosTarde":40,
+      "tipo":"tardanza",
+      "justificada":false,
+      "justificacion":""
+    },
+
+    "2026-05-16_a_20260037": {
+      "alumnoId":"a_20260037",
+      "nombre":"Silva Quispe, Adrián",
+      "fecha":"2026-05-16",
+      "hora":"07:43",
+      "minutosTarde":13,
+      "tipo":"tardanza",
+      "justificada":true,
+      "justificacion":"Cita familiar"
+    }
+  },
+
+  "inasistencias": {
+    "2026-05-16_a_20260005": {
+      "alumnoId":"a_20260005",
+      "nombre":"Paredes Luna, Sebastián",
+      "fecha":"2026-05-16",
+      "tipo":"inasistencia",
+      "justificada":true,
+      "justificacion":"Descanso médico"
+    },
+
+    "2026-05-16_a_20260011": {
+      "alumnoId":"a_20260011",
+      "nombre":"Torres Vega, Carlos",
+      "fecha":"2026-05-16",
+      "tipo":"inasistencia",
+      "justificada":false,
+      "justificacion":""
+    },
+
+    "2026-05-16_a_20260028": {
+      "alumnoId":"a_20260028",
+      "nombre":"Castro Vega, Lucía",
+      "fecha":"2026-05-16",
+      "tipo":"inasistencia",
+      "justificada":true,
+      "justificacion":"Viaje familiar"
+    },
+
+    "2026-05-16_a_20260041": {
+      "alumnoId":"a_20260041",
+      "nombre":"Pérez Torres, Martín",
+      "fecha":"2026-05-16",
+      "tipo":"inasistencia",
+      "justificada":false,
+      "justificacion":""
+    }
+  },
+  
+  "asistencias": {
+
+    "2026-05-16_a_20260002": {
+      "alumnoId":"a_20260002",
+      "nombre":"Mamani Torres, Luciana",
+      "fecha":"2026-05-16",
+      "hora":"07:12",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260003": {
+      "alumnoId":"a_20260003",
+      "nombre":"Vargas Cruz, Thiago",
+      "fecha":"2026-05-16",
+      "hora":"07:08",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260004": {
+      "alumnoId":"a_20260004",
+      "nombre":"Rojas Medina, Valentina",
+      "fecha":"2026-05-16",
+      "hora":"07:21",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260006": {
+      "alumnoId":"a_20260006",
+      "nombre":"Silva Ramos, Camila",
+      "fecha":"2026-05-16",
+      "hora":"07:18",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260008": {
+      "alumnoId":"a_20260008",
+      "nombre":"Castro Ruiz, Mariana",
+      "fecha":"2026-05-16",
+      "hora":"07:10",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260009": {
+      "alumnoId":"a_20260009",
+      "nombre":"García López, José",
+      "fecha":"2026-05-16",
+      "hora":"07:05",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260010": {
+      "alumnoId":"a_20260010",
+      "nombre":"Mendoza Salas, Andrea",
+      "fecha":"2026-05-16",
+      "hora":"07:11",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260012": {
+      "alumnoId":"a_20260012",
+      "nombre":"Núñez Díaz, Daniela",
+      "fecha":"2026-05-16",
+      "hora":"07:19",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260013": {
+      "alumnoId":"a_20260013",
+      "nombre":"Herrera Ramos, Joaquín",
+      "fecha":"2026-05-16",
+      "hora":"07:06",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260014": {
+      "alumnoId":"a_20260014",
+      "nombre":"Cruz Medina, Renata",
+      "fecha":"2026-05-16",
+      "hora":"07:09",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260016": {
+      "alumnoId":"a_20260016",
+      "nombre":"Flores Soto, Mía",
+      "fecha":"2026-05-16",
+      "hora":"07:16",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260017": {
+      "alumnoId":"a_20260017",
+      "nombre":"Pérez Luna, Luis",
+      "fecha":"2026-05-16",
+      "hora":"07:04",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260018": {
+      "alumnoId":"a_20260018",
+      "nombre":"Silva Torres, Ariana",
+      "fecha":"2026-05-16",
+      "hora":"07:22",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260019": {
+      "alumnoId":"a_20260019",
+      "nombre":"Rojas Flores, Leonardo",
+      "fecha":"2026-05-16",
+      "hora":"07:14",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260020": {
+      "alumnoId":"a_20260020",
+      "nombre":"Castillo Vega, Bianca",
+      "fecha":"2026-05-16",
+      "hora":"07:13",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260021": {
+      "alumnoId":"a_20260021",
+      "nombre":"Vargas Soto, Gael",
+      "fecha":"2026-05-16",
+      "hora":"07:15",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260023": {
+      "alumnoId":"a_20260023",
+      "nombre":"Delgado Ruiz, Samuel",
+      "fecha":"2026-05-16",
+      "hora":"07:20",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260024": {
+      "alumnoId":"a_20260024",
+      "nombre":"Medina Flores, Antonella",
+      "fecha":"2026-05-16",
+      "hora":"07:17",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260025": {
+      "alumnoId":"a_20260025",
+      "nombre":"López Paredes, Franco",
+      "fecha":"2026-05-16",
+      "hora":"07:03",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260026": {
+      "alumnoId":"a_20260026",
+      "nombre":"Torres Ramos, Alessia",
+      "fecha":"2026-05-16",
+      "hora":"07:12",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260027": {
+      "alumnoId":"a_20260027",
+      "nombre":"Mendoza Ruiz, Ian",
+      "fecha":"2026-05-16",
+      "hora":"07:25",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260029": {
+      "alumnoId":"a_20260029",
+      "nombre":"Silva Torres, Cristopher",
+      "fecha":"2026-05-16",
+      "hora":"07:07",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260030": {
+      "alumnoId":"a_20260030",
+      "nombre":"Rojas Cruz, Salomé",
+      "fecha":"2026-05-16",
+      "hora":"07:11",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260031": {
+      "alumnoId":"a_20260031",
+      "nombre":"Quispe Luna, Fabio",
+      "fecha":"2026-05-16",
+      "hora":"07:18",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260032": {
+      "alumnoId":"a_20260032",
+      "nombre":"Fernández Medina, Nicole",
+      "fecha":"2026-05-16",
+      "hora":"07:09",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260033": {
+      "alumnoId":"a_20260033",
+      "nombre":"Paredes Soto, Axel",
+      "fecha":"2026-05-16",
+      "hora":"07:13",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260034": {
+      "alumnoId":"a_20260034",
+      "nombre":"Vega Ramos, Emily",
+      "fecha":"2026-05-16",
+      "hora":"07:06",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260035": {
+      "alumnoId":"a_20260035",
+      "nombre":"Torres Ruiz, Dylan",
+      "fecha":"2026-05-16",
+      "hora":"07:22",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260036": {
+      "alumnoId":"a_20260036",
+      "nombre":"Castillo Flores, Abril",
+      "fecha":"2026-05-16",
+      "hora":"07:19",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260038": {
+      "alumnoId":"a_20260038",
+      "nombre":"Navarro Vega, Kiara",
+      "fecha":"2026-05-16",
+      "hora":"07:08",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260039": {
+      "alumnoId":"a_20260039",
+      "nombre":"Mendoza Soto, Bruno",
+      "fecha":"2026-05-16",
+      "hora":"07:14",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260040": {
+      "alumnoId":"a_20260040",
+      "nombre":"Rojas Medina, Aitana",
+      "fecha":"2026-05-16",
+      "hora":"07:10",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260042": {
+      "alumnoId":"a_20260042",
+      "nombre":"Luna Cruz, Fernanda",
+      "fecha":"2026-05-16",
+      "hora":"07:12",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260043": {
+      "alumnoId":"a_20260043",
+      "nombre":"Castro Flores, Benjamín",
+      "fecha":"2026-05-16",
+      "hora":"07:16",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260044": {
+      "alumnoId":"a_20260044",
+      "nombre":"Silva Ramos, Julieta",
+      "fecha":"2026-05-16",
+      "hora":"07:05",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260045": {
+      "alumnoId":"a_20260045",
+      "nombre":"Quispe Vega, Rodrigo",
+      "fecha":"2026-05-16",
+      "hora":"07:17",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260046": {
+      "alumnoId":"a_20260046",
+      "nombre":"Torres Ruiz, Valeria",
+      "fecha":"2026-05-16",
+      "hora":"07:09",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260047": {
+      "alumnoId":"a_20260047",
+      "nombre":"Medina Soto, Santiago",
+      "fecha":"2026-05-16",
+      "hora":"07:11",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260048": {
+      "alumnoId":"a_20260048",
+      "nombre":"Paredes Flores, Luciana",
+      "fecha":"2026-05-16",
+      "hora":"07:15",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260049": {
+      "alumnoId":"a_20260049",
+      "nombre":"Vargas Luna, Matías",
+      "fecha":"2026-05-16",
+      "hora":"07:18",
+      "tipo":"asistencia"
+    },
+
+    "2026-05-16_a_20260050": {
+      "alumnoId":"a_20260050",
+      "nombre":"Ramos Cruz, Daniela",
+      "fecha":"2026-05-16",
+      "hora":"07:21",
+      "tipo":"asistencia"
+    }
+  }
+}

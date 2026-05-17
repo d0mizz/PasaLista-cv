@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pasa Lista — Sistema Escolar Pro</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css">
+
+<style>
+  /* ── Variables adicionales para modales de perfil/usuarios ── */
+  :root {
+    --surface2: rgba(255,255,255,0.05);
+    --border:   rgba(255,255,255,0.12);
+  }
+  [data-theme="light"] {
+    --surface2: rgba(26,26,46,0.05);
+    --border:   rgba(26,26,46,0.12);
+  }
+
+  /* ── Badge dark (inasistencia) ── */
+  .badge-dark {
+    background: rgba(100,100,140,0.2);
+    color: #a0a0c0;
+    border-color: rgba(100,100,140,0.3);
+  }
+
+  /* ── User chip interactivo ── */
+  .user-chip {
+    border-radius: 12px;
+    transition: background .2s;
+  }
+  .user-chip:hover {
+    background: rgba(255,255,255,0.06);
+  }
+  [data-theme="light"] .user-chip:hover {
+    background: rgba(26,26,46,0.05);
+  }
+  .user-chip-edit-hint {
+    font-size: 10px;
+    color: var(--text-mute);
+    margin-top: 1px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── Radio tipo registro ── */
+  .tipo-registro-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .tipo-registro-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    padding: 11px 14px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: border-color .18s, background .18s;
+    user-select: none;
+  }
+  .tipo-registro-label:has(input:checked) {
+    border-color: var(--accent);
+    background: rgba(192,57,43,0.08);
+  }
+  .tipo-registro-label input[type="radio"] {
+    accent-color: var(--accent);
+  }
+
+  /* ── Modal de perfil / gestión usuarios ── */
+  .profile-hero {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    background: var(--surface2);
+    border-radius: 14px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+  }
+  .profile-avatar-lg {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .profile-meta-name { font-weight: 700; font-size: 15px; }
+  .profile-meta-email { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .profile-meta-role { margin-top: 5px; }
+
+  .user-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 6px;
+  }
+  .user-list-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px;
+    flex-shrink: 0;
+  }
+  .user-list-info { flex: 1; min-width: 0; }
+  .user-list-name {
+    font-weight: 600; font-size: 13px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .user-list-email {
+    font-size: 11px; color: var(--text-dim);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .modal-section-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 16px 0 10px;
+  }
+  .modal-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 18px 0;
+  }
+
+  /* ── Scroll interno en modal de usuarios ── */
+  .user-list-scroll {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 2px;
+  }
+  .user-list-scroll::-webkit-scrollbar { width: 4px; }
+  .user-list-scroll::-webkit-scrollbar-track { background: transparent; }
+  .user-list-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* ── Configuración — aviso de solo lectura para operador ── */
+  .cfg-readonly-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(192,57,43,0.08);
+    border: 1px solid rgba(192,57,43,0.2);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+</style>
+</head>
+<body>
+
+<div id="app-loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text">Iniciando Pasa Lista...</div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA DE LOGIN
+══════════════════════════════════════════ -->
+<div id="login-screen" class="hide">
+  <div class="login-bg-orb orb-1"></div>
+  <div class="login-bg-orb orb-2"></div>
+  <div class="login-card glass">
+    <div class="login-header">
+      <div class="login-logo">
+        <img src="img/logo.png" alt="Pasa Lista" style="width:100%;height:100%;object-fit:contain;border-radius:inherit;"/>
+      </div>
+      <h2 class="login-title">Pasa Lista</h2>
+      <p class="login-subtitle">Sistema Escolar Profesional</p>
+    </div>
+    <div id="login-error" class="login-error"></div>
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input type="email" id="login-email" class="form-input" placeholder="correo@ejemplo.com"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input type="password" id="login-pass" class="form-input" placeholder="••••••••"
+             onkeydown="if(event.key==='Enter')authModule.login()"/>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="authModule.login()">
+      <span>Iniciar Sesión</span>
+    </button>
+    <p class="login-footer">© 2026 Pasa Lista — Educación digital</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     APP PRINCIPAL
+══════════════════════════════════════════ -->
+<div id="app" class="hide">
+  <div class="layout">
+
+    <!-- ── SIDEBAR ─────────────────────────── -->
+    <aside class="sidebar" id="sidebar">
+
+      <div class="sidebar-brand">
+        <div class="sidebar-logo">
+          <img src="img/logo.png" alt="Pasa Lista" style="width:100%;height:100%;object-fit:contain;border-radius:inherit;"/>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-item active" data-page="dashboard" onclick="ui.navigate('dashboard')">
+          <span class="nav-icon">📊</span><span>Dashboard</span>
+        </div>
+        <div class="nav-item" data-page="alumnos" onclick="ui.navigate('alumnos')">
+          <span class="nav-icon">🎒</span><span>Alumnos</span>
+        </div>
+        <div class="nav-item" data-page="scanner" onclick="ui.navigate('scanner')">
+          <span class="nav-icon">📷</span><span>Escáner QR</span>
+        </div>
+        <div class="nav-item" data-page="importar" onclick="ui.navigate('importar')">
+          <span class="nav-icon">📥</span><span>Importar</span>
+        </div>
+        <div class="nav-item" data-page="reportes" onclick="ui.navigate('reportes')">
+          <span class="nav-icon">🗂️</span><span>Reportes</span>
+        </div>
+        <div class="nav-item" data-page="configuracion" onclick="ui.navigate('configuracion')">
+          <span class="nav-icon">⚙️</span><span>Configuración</span>
+        </div>
+      </nav>
+
+      <!-- Chip de usuario → abre modal de perfil -->
+      <div class="sidebar-footer">
+        <div class="user-chip" onclick="ui.openUserProfileModal()" title="Editar perfil" style="cursor:pointer;">
+          <div class="user-avatar" id="user-avatar">D</div>
+          <div style="min-width:0;flex:1;">
+            <div class="user-name" id="user-name">Demo User</div>
+            <div class="user-role" id="user-role-label">Administrador</div>
+            <div class="user-chip-edit-hint">✏ Editar perfil</div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── CONTENIDO PRINCIPAL ──────────────── -->
+    <div class="main">
+
+      <header class="navbar glass">
+        <div class="navbar-left">
+          <button class="icon-btn mobile-only" onclick="ui.toggleSidebar()">☰</button>
+          <div>
+            <div class="navbar-title" id="navbar-title">Dashboard</div>
+            <div class="navbar-sub" id="navbar-sub">Resumen general del sistema</div>
+          </div>
+        </div>
+        <div class="navbar-actions">
+          <button class="icon-btn" title="Cambiar tema" onclick="ui.toggleTheme()">🌓</button>
+          <button class="icon-btn" title="Notificaciones">🔔</button>
+          <button class="btn btn-primary btn-sm" onclick="authModule.logout()">Cerrar Sesión</button>
+        </div>
+      </header>
+
+      <main class="content">
+
+        <!-- ─── DASHBOARD ─── -->
+        <section id="page-dashboard" class="page active">
+          <div class="stats-grid" id="stat-cards"></div>
+          <div class="charts-grid">
+            <div class="card glass">
+              <div class="card-header">
+                <h3>Asistencia Semanal</h3>
+                <span class="badge">Últimos 7 días</span>
+              </div>
+              <canvas id="chart-weekly"></canvas>
+            </div>
+            <div class="card glass">
+              <div class="card-header">
+                <h3>Distribución</h3>
+                <span class="badge">Hoy</span>
+              </div>
+              <canvas id="chart-donut"></canvas>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="card-header">
+              <h3>Actividad Reciente</h3>
+              <button class="btn btn-ghost btn-sm" onclick="ui.navigate('reportes')">Ver todo</button>
+            </div>
+            <div id="recent-activity" class="activity-list"></div>
+          </div>
+          <div class="card glass chart-low-attendance-card">
+            <div class="card-header">
+              <h3>Asistencia baja (&lt; 80%)</h3>
+              <span class="badge badge-danger" id="low-attendance-badge">0 alumnos</span>
+            </div>
+            <p class="muted chart-low-attendance-note">Índice según a tiempo (100%), tardanzas (50%) e inasistencias (0%) sobre el total de días registrados.</p>
+            <div id="low-attendance-empty" class="empty-state hide">Ningún alumno está por debajo del 80% de asistencia.</div>
+            <div class="chart-low-attendance-wrap">
+              <canvas id="chart-low-attendance"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── ALUMNOS ─── -->
+        <section id="page-alumnos" class="page">
+          <div class="page-toolbar">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="search-alumnos"
+                     placeholder="Buscar por nombre, código o grado..."
+                     oninput="ui.renderAlumnos()"/>
+            </div>
+            <div class="toolbar-actions">
+              <button class="btn btn-ghost" id="btn-gen-all-qr" onclick="ui.generateAllQR()">📱 Generar todos los QR</button>
+              <button class="btn btn-ghost" onclick="ui.openAlumnoModal()">＋ Nuevo Alumno</button>
+              <button class="btn btn-primary" onclick="appCore.exportAlumnos()">Exportar Excel</button>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Apellidos</th>
+                    <th>Nombres</th>
+                    <th>Grado</th>
+                    <th>Sección</th>
+                    <th>Estado</th>
+                    <th>QR</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="alumnos-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── ESCÁNER QR ─── -->
+        <section id="page-scanner" class="page">
+          <div class="scanner-grid">
+            <div class="card glass">
+              <div class="card-header">
+                <h3>Escáner QR</h3>
+                <span class="badge badge-success" id="scanner-status">Inactivo</span>
+              </div>
+              <div id="qr-reader"></div>
+              <div class="scanner-controls">
+                <button class="btn btn-primary btn-block" id="btn-start-scan" onclick="appCore.startScanner()">
+                  ▶ Iniciar Cámara
+                </button>
+                <button class="btn btn-ghost btn-block hide" id="btn-stop-scan" onclick="appCore.stopScanner()">
+                  ■ Detener
+                </button>
+                <button class="btn btn-ghost btn-block" onclick="ui.openManualRegistro()">
+                  ✍ Registro Manual
+                </button>
+              </div>
+            </div>
+            <div class="card glass">
+              <div class="card-header"><h3>Registros del Día</h3></div>
+              <div class="scan-feed" id="scan-feed">
+                <div class="empty-state">Esperando escaneos...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── IMPORTAR ─── -->
+        <section id="page-importar" class="page">
+          <div class="card glass">
+            <div class="card-header"><h3>Importar desde PDF o Excel</h3></div>
+            <p class="muted">Sube un archivo PDF (lista oficial) o Excel para registrar alumnos automáticamente.</p>
+            <div class="drop-area" id="drop-area">
+              <div class="drop-icon">📂</div>
+              <p>Arrastra el archivo aquí o</p>
+              <label class="btn btn-primary">
+                Seleccionar archivo
+                <input type="file" id="file-input" accept=".pdf,.xlsx,.xls"
+                       style="display:none" onchange="appCore.handleFile(event)"/>
+              </label>
+            </div>
+            <div id="import-preview"></div>
+          </div>
+        </section>
+
+        <!-- ─── REPORTES ─── -->
+        <section id="page-reportes" class="page">
+          <div class="page-toolbar">
+            <div class="toolbar-actions">
+              <button class="btn btn-ghost" onclick="appCore.exportReportePDF()">📄 PDF</button>
+              <button class="btn btn-primary" onclick="appCore.exportReporteExcel()">📊 Excel</button>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="card-header"><h3>Historial de Asistencias</h3></div>
+            <div class="table-wrap">
+              <div class="filters">
+                <select id="filter-periodo">
+                  <option value="30">Últimos 30 días</option>
+                  <option value="7">Últimos 7 días</option>
+                  <option value="1">Hoy</option>
+                  <option value="2">Ayer</option>
+                  <option value="0">Todo el historial</option>
+                  <option value="custom">Rango personalizado</option>
+                </select>
+                <span id="filter-custom-range" style="display:none;align-items:center;gap:6px;">
+                  <input type="date" id="filter-desde" title="Desde">
+                  <span style="color:var(--text-dim);font-size:12px">→</span>
+                  <input type="date" id="filter-hasta" title="Hasta">
+                </span>
+                <select id="filter-grado">
+                  <option value="">Todos los grados</option>
+                </select>
+                <select id="filter-seccion">
+                  <option value="">Todas las secciones</option>
+                </select>
+                <select id="filter-estado">
+                  <option value="">Todos</option>
+                  <option value="asistencia">Asistencia</option>
+                  <option value="tardanza">Tardanza</option>
+                  <option value="inasistencia">Inasistencia</option>
+                </select>
+                <button id="btn-filtrar">Filtrar</button>
+              </div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Alumno</th>
+                    <th>Grado</th>
+                    <th>Sección</th>
+                    <th>Hora</th>
+                    <th>Estado</th>
+                    <th>Justificación</th>
+                  </tr>
+                </thead>
+                <tbody id="reportes-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── CONFIGURACIÓN ─── -->
+        <section id="page-configuracion" class="page">
+          <div class="config-grid">
+            <div class="card glass">
+              <div class="card-header"><h3>Parámetros del Sistema</h3></div>
+
+              <!-- Aviso visible solo para operadores (se muestra/oculta desde ui.js) -->
+              <div class="cfg-readonly-notice hide" id="cfg-readonly-notice">
+                🔒 Solo el administrador puede modificar estos parámetros.
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Hora límite de entrada</label>
+                <input type="time" id="cfg-hora" class="form-input" value="07:30"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">% Asistencia mínima</label>
+                <input type="number" id="cfg-min" class="form-input" value="70" min="0" max="100"/>
+              </div>
+              <button class="btn btn-primary" id="btn-save-config" onclick="appCore.saveConfig()">
+                Guardar cambios
+              </button>
+            </div>
+            <div class="card glass">
+              <div class="card-header"><h3>Tema visual</h3></div>
+              <p class="muted">Cambia entre modo oscuro y claro adaptado a la paleta.</p>
+              <button class="btn btn-ghost" onclick="ui.toggleTheme()">🌓 Cambiar Tema</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div><!-- /main -->
+  </div><!-- /layout -->
+</div><!-- /app -->
+
+<!-- Modal root global -->
+<div id="modal-root"></div>
+
+<script src="app.js"></script>
+<script src="QR.js"></script>
+<script src="ui.js"></script>
+
+<script>
+  // Actualizar la etiqueta de rol en el sidebar según STATE.userProfile
+  // Se ejecuta después de que ui.initApp() haya cargado el perfil
+  (function patchInitApp() {
+    const _origInit = ui.initApp.bind(ui);
+    ui.initApp = function() {
+      _origInit();
+      const roleLabel = document.getElementById('user-role-label');
+      if (roleLabel && STATE.userProfile) {
+        roleLabel.textContent = STATE.userProfile.role === 'admin'
+          ? '👑 Administrador'
+          : '👤 Operador';
+      }
+    };
+  })();
+</script>
+</body>
+</html>
